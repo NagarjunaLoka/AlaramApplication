@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         alarmTimePicker = (TimePicker) findViewById(R.id.timePicker);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Log.i("TAG","Main method");
 
     }
 
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         if (((ToggleButton) view).isChecked()) {
             Toast.makeText(MainActivity.this, "ALARM ON", Toast.LENGTH_SHORT).show();
             Calendar calendar = Calendar.getInstance();
+            Log.i("TAG","Button clicked");
 
             // calendar is called to get current time in hour and minute
             calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
@@ -49,24 +53,16 @@ public class MainActivity extends AppCompatActivity {
             // BroadcastReceiver
             Intent intent = new Intent(this, AlarmReceiver.class);
 
-            // we call broadcast using pendingIntent
-         //   pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                             pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+                Log.i("TAG","if");
 
-            PendingIntent pendingIntent;
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-
-                pendingIntent =PendingIntent.getBroadcast(this,0, intent, PendingIntent.FLAG_IMMUTABLE);
-              //  pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            }
-            else
-            {
+            }else {
                 pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                Log.i("TAG","else");
+
+
             }
-
-
-
 
             time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
             if (System.currentTimeMillis() > time) {

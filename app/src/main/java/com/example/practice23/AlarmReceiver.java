@@ -12,13 +12,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.Log;
 import android.widget.Toast;
 
 public class AlarmReceiver extends BroadcastReceiver {
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     // implement onReceive() method
     public void onReceive(Context context, Intent intent) {
+        Log.i("TAG","onReceive");
 
         // we will use vibrator first
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -32,5 +33,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         // setting default ringtone
         Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
+        // play ringtone
+        ringtone.play();
     }
 }
